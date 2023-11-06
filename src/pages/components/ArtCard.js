@@ -8,7 +8,7 @@ const ArtCard = ({ artworks }) => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-      {artworks.map((artwork, index) => (
+      {artworks && artworks.map((artwork, index) => (
         <div
           key={index}
           className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
