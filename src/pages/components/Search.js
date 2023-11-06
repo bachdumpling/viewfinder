@@ -47,13 +47,7 @@ function Search({ apiKey }) {
       console.log("gpt output", gptResponse);
 
       // Fetch art details using the data from GPT API
-      if (
-        gptResponse
-        // &&
-        // gptResponse.artPieceName &&
-        // gptResponse.artist &&
-        // gptResponse.year
-      ) {
+      if (gptResponse) {
         fetchArtworks(
           gptResponse[0].artPieceName,
           gptResponse[0].artist,
@@ -67,10 +61,10 @@ function Search({ apiKey }) {
   };
 
   return (
-    <div className="bg-gray-800 p-5 min-h-screen">
-      <div className="max-w-2xl mx-auto">
+    <div className="bg-gray-700 p-5 min-h-screen w-full mx-auto">
+      <div className="">
         <h1 className="text-3xl font-bold text-center text-white mb-6">
-          Art Search
+          Viewfinder
         </h1>
         <form
           onSubmit={handleSubmit}
