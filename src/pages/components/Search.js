@@ -2,24 +2,62 @@ import OpenAI from "openai";
 import React, { useEffect, useState } from "react";
 import ArtCard from "./ArtCard";
 
-function Search({ apiKey }) {
+function Search({}) {
   const [inputValue, setInputValue] = useState("");
   const [outputValue, setOutputValue] = useState("");
   const [artworks, setArtworks] = useState(null);
+  const [artType, setArtType] = useState("painting");
 
   // Function to call the Art Institute API
-  const fetchArtworks = async (artPieceName, artist, year) => {
-    // Encode the search terms for use in a URL
-    // const query = `q=${encodeURIComponent(artPieceName)}
-    // &q=${encodeURIComponent(artist)}&q=${encodeURIComponent(year)}`;
-    const query = `q=${encodeURIComponent(artPieceName)}`;
-    const apiURL = `https://api.artic.edu/api/v1/artworks/search?${query}&fields=id,title,artist_display,date_display,image_id,artist_title,artist_id`;
+  // Function to call both Art Institute and Met Museum APIs
+  const fetchArtworks = async (artPieceName, artist) => {
+    const articQuery = `q=${encodeURIComponent(
+      artPieceName
+    )}&q=${encodeURIComponent(artist)}`;
+    const articApiURL = `https://api.artic.edu/api/v1/artworks/search?${articQuery}&fields=id,title,artist_display,date_display,image_id,artist_title,artist_id`;
+
+    const metApiQuery = `q=${encodeURIComponent(
+      artPieceName
+    )}+${encodeURIComponent(artist)}`;
+    const metApiURL = `https://collectionapi.metmuseum.org/public/collection/v1/search?title=true&${metApiQuery}}`;
+
+    console.log("met:", metApiURL);
+    console.log("artic:", articApiURL);
 
     try {
-      const artResponse = await fetch(apiURL);
-      const artData = await artResponse.json();
-      setArtworks(artData.data); // Assuming the response has a 'data' key
-      console.log("Art details fetched:", artData);
+      // Fetch data from both APIs concurrently
+      const [articResponse, metResponse] = await Promise.all([
+        fetch(articApiURL),
+        fetch(metApiURL),
+      ]);
+      const articData = await articResponse.json();
+      const metData = await metResponse.json();
+
+      // If there are Met objects, fetch the first one to get its details
+      let metObjectDetails = null;
+      if (metData.objectIDs && metData.objectIDs.length > 0) {
+        const metObjectDetailsUrl = `https://collectionapi.metmuseum.org/public/collection/v1/objects/${metData.objectIDs[0]}`;
+        const metObjectResponse = await fetch(metObjectDetailsUrl);
+        metObjectDetails = await metObjectResponse.json();
+      }
+
+      // Combine and interleave the results
+      const combinedArtworks = [];
+      for (
+        let i = 0;
+        i < Math.max(articData.data.length, metObjectDetails ? 1 : 0);
+        i++
+      ) {
+        if (articData.data[i]) {
+          combinedArtworks.push({ source: "artic", data: articData.data[i] });
+        }
+        if (i === 0 && metObjectDetails) {
+          combinedArtworks.push({ source: "met", data: metObjectDetails });
+        }
+      }
+
+      setArtworks(combinedArtworks); // Set the combined results
+      console.log("Art details fetched:", articData, metData);
     } catch (error) {
       console.error("Error fetching art details:", error);
       setArtworks("Failed to fetch art details");
@@ -28,12 +66,21 @@ function Search({ apiKey }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Check if input has at least 5 words
+    const words = inputValue.trim().split(/\s+/);
+    if (words.length < 5) {
+      alert("Please enter at least 5 words for the search.");
+      return;
+    }
+
     // const prompt = `what is the painting of ${inputValue}? The answers should have the name of the art piece, the artist, the date in which it is displayed. Return only json, do not write normal text. Give from 3 to 5 answers.`;
 
-    const prompt = `what is this painting: ${inputValue}?`;
+    const prompt = `what is this ${artType}: ${inputValue}?`;
 
     try {
-      const response = await fetch("/api/search", {
+      console.log(prompt);
+      const response = await fetch("/api/gpt", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +122,18 @@ function Search({ apiKey }) {
               htmlFor="search"
               className="block text-gray-700 text-sm font-bold mb-2"
             >
-              Input:
+              <span className="">
+                What is this
+                <select
+                  onChange={(e) => setArtType(e.target.value)}
+                  className="mx-2 rounded"
+                  value={artType}
+                >
+                  <option>painting</option>
+                  <option>sculpture</option>
+                </select>
+                :
+              </span>
             </label>
             <input
               id="search"

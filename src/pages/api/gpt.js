@@ -32,8 +32,8 @@ export default async function handler(req, res) {
           {
             role: "system",
             content:
-            //   "You are a helpful art assistant. Format the response as a JSON array of objects with keys 'artPieceName: string', 'artist: string', 'year: integer', and dateBegin and dateEnd: JSON date. Return 2-3 possible answers",
-            "You are a helpful art assistant. Format the response as a JSON array of objects with keys 'artPieceName: string', 'artist: string', 'year: integer'. Only return 1 response.",
+              //   "You are a helpful art assistant. Format the response as a JSON array of objects with keys 'artPieceName: string', 'artist: string', 'year: integer', and dateBegin and dateEnd: JSON date. Return 2-3 possible answers",
+              "You are a helpful art assistant. Format the response as a JSON array of objects with keys 'artPieceName: string', 'artist: string', 'year: integer'. Only return 1 response.",
           },
           {
             role: "user",
@@ -41,6 +41,9 @@ export default async function handler(req, res) {
           },
         ],
         model: "gpt-4",
+        temperature: 0.3,
+
+        // response_format: {type: "json_object"},
         // functions: [
         //   {
         //     name: "search_art",
