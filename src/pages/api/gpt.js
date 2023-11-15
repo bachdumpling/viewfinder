@@ -1,4 +1,3 @@
-// pages/api/search.js
 import OpenAI from "openai";
 
 export default async function handler(req, res) {
@@ -8,6 +7,7 @@ export default async function handler(req, res) {
         apiKey: process.env.OPENAI_API_KEY,
       });
 
+      // Expanded schema to include additional details for the Met API search
       const artSearchSchema = {
         type: "object",
         properties: {
@@ -18,22 +18,23 @@ export default async function handler(req, res) {
               properties: {
                 artPieceName: { type: "string" },
                 artist: { type: "string" },
-                year: { type: "integer" },
+                medium: { type: "string" },
+                // dateDisplay: { type: "date" },
               },
-              required: ["artPieceName", "artist", "year"],
+              required: ["artPieceName", "artist", "medium"],
             },
           },
         },
         required: ["results"],
       };
 
+      // Updated prompt to request the new information
       const response = await openai.chat.completions.create({
         messages: [
           {
             role: "system",
             content:
-              //   "You are a helpful art assistant. Format the response as a JSON array of objects with keys 'artPieceName: string', 'artist: string', 'year: integer', and dateBegin and dateEnd: JSON date. Return 2-3 possible answers",
-              "You are a helpful art assistant. Format the response as a JSON array of objects with keys 'artPieceName: string', 'artist: string', 'year: integer'. Only return 1 response.",
+              "You are a helpful art expert. Format the response as a JSON array of objects with keys 'artPieceName: string', 'artist: string', 'medium: string'. Return 1 to 3 responses.",
           },
           {
             role: "user",
@@ -41,17 +42,8 @@ export default async function handler(req, res) {
           },
         ],
         model: "gpt-4",
-        temperature: 0.3,
-
-        // response_format: {type: "json_object"},
-        // functions: [
-        //   {
-        //     name: "search_art",
-        //     description:
-        //       "Search for art based on a query and return results in a structured format.",
-        //     parameters: artSearchSchema,
-        //   },
-        // ],
+        temperature: 0.8,
+        // function_call: artSearchSchema,
       });
 
       res.status(200).json({ result: response.choices });

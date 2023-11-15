@@ -3,26 +3,42 @@ import React, { useEffect, useState } from "react";
 import ArtCard from "./ArtCard";
 
 function Search({}) {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState({
+    subject: "",
+    colors: "",
+    styleOrEmotion: "",
+    location: "",
+  });
   const [outputValue, setOutputValue] = useState("");
   const [artworks, setArtworks] = useState(null);
   const [artType, setArtType] = useState("painting");
 
-  // Function to call the Art Institute API
   // Function to call both Art Institute and Met Museum APIs
-  const fetchArtworks = async (artPieceName, artist) => {
+  const fetchArtworks = async (artPieceName, artist, medium) => {
+    // Encode the search terms for use in a URL
     const articQuery = `q=${encodeURIComponent(
       artPieceName
     )}&q=${encodeURIComponent(artist)}`;
     const articApiURL = `https://api.artic.edu/api/v1/artworks/search?${articQuery}&fields=id,title,artist_display,date_display,image_id,artist_title,artist_id`;
 
-    const metApiQuery = `q=${encodeURIComponent(
-      artPieceName
-    )}+${encodeURIComponent(artist)}`;
-    const metApiURL = `https://collectionapi.metmuseum.org/public/collection/v1/search?title=true&${metApiQuery}}`;
+    // Initialize the Met API query parts array with the title and hasImages parameters
+    const metApiQueryParts = [
+      `title=true`,
+      `q=${encodeURIComponent(artPieceName)}`,
+      `artistOrCulture=true`,
+      `hasImages=true`,
+    ];
 
-    console.log("met:", metApiURL);
-    console.log("artic:", articApiURL);
+    // Conditionally add other parameters if they have valid values
+    // if (medium) {
+    //   metApiQueryParts.push(`medium=${encodeURIComponent(medium)}`);
+    // }
+
+    const metApiQuery = metApiQueryParts.join("&");
+    const metApiURL = `https://collectionapi.metmuseum.org/public/collection/v1/search?${metApiQuery}`;
+
+    console.log("Met API URL:", metApiURL);
+    console.log("Artic API URL:", articApiURL);
 
     try {
       // Fetch data from both APIs concurrently
@@ -57,6 +73,7 @@ function Search({}) {
       }
 
       setArtworks(combinedArtworks); // Set the combined results
+      console.log("Combined Artworks:", artworks);
       console.log("Art details fetched:", articData, metData);
     } catch (error) {
       console.error("Error fetching art details:", error);
@@ -68,15 +85,23 @@ function Search({}) {
     event.preventDefault();
 
     // Check if input has at least 5 words
-    const words = inputValue.trim().split(/\s+/);
-    if (words.length < 5) {
-      alert("Please enter at least 5 words for the search.");
+    if (inputValue.subject.trim().split(/\s+/).length < 5) {
+      alert("Please enter at least 1 word for the subject.");
       return;
     }
 
-    // const prompt = `what is the painting of ${inputValue}? The answers should have the name of the art piece, the artist, the date in which it is displayed. Return only json, do not write normal text. Give from 3 to 5 answers.`;
+    let prompt = `What is a ${artType} of a ${inputValue.subject}`;
 
-    const prompt = `what is this ${artType}: ${inputValue}?`;
+    if (inputValue.colors.trim()) {
+      prompt += ` with ${inputValue.colors} as main color(s)`;
+    }
+    if (inputValue.styleOrEmotion.trim()) {
+      prompt += ` having ${inputValue.styleOrEmotion} as the main style or emotion`;
+    }
+    if (inputValue.location.trim()) {
+      prompt += `. I saw it in ${inputValue.location}`;
+    }
+    prompt += ".";
 
     try {
       console.log(prompt);
@@ -98,13 +123,20 @@ function Search({}) {
         fetchArtworks(
           gptResponse[0].artPieceName,
           gptResponse[0].artist,
-          gptResponse[0].year
+          gptResponse[0].medium
         );
       }
     } catch (error) {
       console.error("Failed to fetch from API:", error);
       setOutputValue("Failed to fetch");
     }
+  };
+
+  const handleInputChange = (event) => {
+    setInputValue({
+      ...inputValue,
+      [event.target.name]: event.target.value,
+    });
   };
 
   return (
@@ -135,15 +167,78 @@ function Search({}) {
                 :
               </span>
             </label>
-            <input
-              id="search"
-              type="text"
-              value={inputValue}
-              onChange={(event) => setInputValue(event.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Search for an artwork..."
-            />
+            <div>
+              <div className="mb-4">
+                <label
+                  htmlFor="subject"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Subject:
+                </label>
+                <input
+                  id="subject"
+                  name="subject"
+                  type="text"
+                  value={inputValue.subject}
+                  onChange={handleInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  placeholder="Subject and/or action (e.g., 'woman in a blue dress reaching for the sky')"
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="colors"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Main Colors:
+                </label>
+                <input
+                  id="colors"
+                  name="colors"
+                  type="text"
+                  value={inputValue.colors}
+                  onChange={handleInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  placeholder="Main Colors"
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="styleOrEmotion"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Style or Emotion:
+                </label>
+                <input
+                  id="styleOrEmotion"
+                  name="styleOrEmotion"
+                  type="text"
+                  value={inputValue.styleOrEmotion}
+                  onChange={handleInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  placeholder="Style or Emotion (e.g., 'Renaissance', 'joyful', 'abstract')"
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="location"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Location:
+                </label>
+                <input
+                  id="location"
+                  name="location"
+                  type="text"
+                  value={inputValue.location}
+                  onChange={handleInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  placeholder="Where You Saw It (e.g., 'museum', 'book', 'website')"
+                />
+              </div>
+            </div>
           </div>
+
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
