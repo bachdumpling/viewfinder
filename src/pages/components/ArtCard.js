@@ -1,6 +1,26 @@
 import React, { useEffect, useState } from "react";
 
 const ArtCard = ({ artworks }) => {
+  const [tooltip, setTooltip] = useState({
+    show: false,
+    x: 0,
+    y: 0,
+    artwork: null,
+  });
+  const [hoverTimeout, setHoverTimeout] = useState(null);
+
+  const handleMouseEnter = (event, artwork) => {
+    const timeout = setTimeout(() => {
+      setTooltip({ show: true, x: event.clientX, y: event.clientY, artwork });
+    }, 1000); // Delay of 2 seconds
+    setHoverTimeout(timeout);
+  };
+
+  const handleMouseLeave = () => {
+    clearTimeout(hoverTimeout); // Clear the timeout if mouse leaves before tooltip shows
+    setTooltip({ ...tooltip, show: false });
+  };
+
   const [selectedArtwork, setSelectedArtwork] = useState(null);
 
   const getArticImageUrl = (imageId) => {
@@ -36,7 +56,8 @@ const ArtCard = ({ artworks }) => {
               className="shadow-md transition-transform duration-300 ease-in-out hover:scale-105"
             >
               <div
-                onClick={() => handleImageClick(artwork)}
+                onMouseEnter={(event) => handleMouseEnter(event, artwork)}
+                onMouseLeave={handleMouseLeave}
                 className="cursor-pointer overflow-hidden"
               >
                 {item.source === "artic" && artwork.image_id && (
@@ -58,25 +79,29 @@ const ArtCard = ({ artworks }) => {
           );
         })}
 
-      {selectedArtwork && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
-          <div className="bg-white text-black rounded-lg shadow-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold mb-2">{selectedArtwork.title}</h2>
-            <p>
-              Artist:{" "}
-              {selectedArtwork.artist_display ||
-                selectedArtwork.artistDisplayName}
-            </p>
-            <p>
-              Date: {selectedArtwork.date_display || selectedArtwork.objectDate}
-            </p>
-            <button
-              onClick={() => setSelectedArtwork(null)}
-              className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
-            >
-              Close
-            </button>
-          </div>
+      {tooltip.show && (
+        <div
+          style={{
+            top: tooltip.y + 15,
+            left: tooltip.x + 15,
+            position: "fixed",
+            zIndex: 50,
+            backgroundColor: "white",
+            padding: "10px",
+            borderRadius: "5px",
+            boxShadow: "0px 0px 10px rgba(0,0,0,0.5)",
+          }}
+          className="text-black"
+        >
+          <h2 className="text-xl font-bold mb-2">{tooltip.artwork.title}</h2>
+          <p>
+            Artist:{" "}
+            {tooltip.artwork.artist_display ||
+              tooltip.artwork.artistDisplayName}
+          </p>
+          <p>
+            Date: {tooltip.artwork.date_display || tooltip.artwork.objectDate}
+          </p>
         </div>
       )}
     </div>
