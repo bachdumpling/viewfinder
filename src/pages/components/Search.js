@@ -14,71 +14,67 @@ function Search({}) {
   const [artType, setArtType] = useState("painting");
 
   // Function to call both Art Institute and Met Museum APIs
-  const fetchArtworks = async (artPieceName, artist, medium) => {
-    // Encode the search terms for use in a URL
-    const articQuery = `q=${encodeURIComponent(
-      artPieceName
-    )}&q=${encodeURIComponent(artist)}`;
-    const articApiURL = `https://api.artic.edu/api/v1/artworks/search?${articQuery}&fields=id,title,artist_display,date_display,image_id,artist_title,artist_id`;
+  const fetchArtworks = async (artPieces) => {
+    let combinedArtworks = [];
 
-    // Initialize the Met API query parts array with the title and hasImages parameters
-    const metApiQueryParts = [
-      `title=true`,
-      `q=${encodeURIComponent(artPieceName)}`,
-      `artistOrCulture=true`,
-      `hasImages=true`,
-    ];
+    for (const artPiece of artPieces) {
+      // const articQuery = `q=${encodeURIComponent(
+      //   artPiece.artPieceName
+      // )}&q=${encodeURIComponent(artPiece.artist)}`;
+      const articQuery = `q=${encodeURIComponent(artPiece.artPieceName)}`;
+      const articApiURL = `https://api.artic.edu/api/v1/artworks/search?${articQuery}&fields=id,title,artist_display,date_display,image_id,artist_title&limit=5`;
 
-    // Conditionally add other parameters if they have valid values
-    // if (medium) {
-    //   metApiQueryParts.push(`medium=${encodeURIComponent(medium)}`);
-    // }
+      // const metApiQuery = `title=true&q=${encodeURIComponent(
+      //   artPiece.artPieceName
+      // )}&artistOrCulture=true&hasImages=true`;
+      const metApiQuery = `title=true&q=${encodeURIComponent(
+        artPiece.artPieceName
+      )}`;
+      const metApiURL = `https://collectionapi.metmuseum.org/public/collection/v1/search?${metApiQuery}`;
 
-    const metApiQuery = metApiQueryParts.join("&");
-    const metApiURL = `https://collectionapi.metmuseum.org/public/collection/v1/search?${metApiQuery}`;
+      console.log("Met API URL:", metApiURL);
+      console.log("Artic API URL:", articApiURL);
 
-    console.log("Met API URL:", metApiURL);
-    console.log("Artic API URL:", articApiURL);
+      try {
+        // Fetch data from both APIs concurrently
+        const [articResponse, metResponse] = await Promise.all([
+          fetch(articApiURL),
+          fetch(metApiURL),
+        ]);
+        const articData = await articResponse.json();
+        const metData = await metResponse.json();
+        console.log("Art details fetched:", articData, metData);
 
-    try {
-      // Fetch data from both APIs concurrently
-      const [articResponse, metResponse] = await Promise.all([
-        fetch(articApiURL),
-        fetch(metApiURL),
-      ]);
-      const articData = await articResponse.json();
-      const metData = await metResponse.json();
-
-      // If there are Met objects, fetch the first one to get its details
-      let metObjectDetails = null;
-      if (metData.objectIDs && metData.objectIDs.length > 0) {
-        const metObjectDetailsUrl = `https://collectionapi.metmuseum.org/public/collection/v1/objects/${metData.objectIDs[0]}`;
-        const metObjectResponse = await fetch(metObjectDetailsUrl);
-        metObjectDetails = await metObjectResponse.json();
-      }
-
-      // Combine and interleave the results
-      const combinedArtworks = [];
-      for (
-        let i = 0;
-        i < Math.max(articData.data.length, metObjectDetails ? 1 : 0);
-        i++
-      ) {
-        if (articData.data[i]) {
-          combinedArtworks.push({ source: "artic", data: articData.data[i] });
+        // If there are Met objects, fetch the first one to get its details
+        let metObjectDetails = null;
+        if (metData.objectIDs && metData.objectIDs.length > 0) {
+          const metObjectDetailsUrl = `https://collectionapi.metmuseum.org/public/collection/v1/objects/${metData.objectIDs[0]}`;
+          const metObjectResponse = await fetch(metObjectDetailsUrl);
+          metObjectDetails = await metObjectResponse.json();
         }
-        if (i === 0 && metObjectDetails) {
+
+        // Combine and interleave the results
+        if (articData.data && articData.data.length > 0) {
+          combinedArtworks = combinedArtworks.concat(
+            articData.data.map((item) => {
+              return { source: "artic", data: item };
+            })
+          );
+        }
+        if (metObjectDetails) {
           combinedArtworks.push({ source: "met", data: metObjectDetails });
         }
+      } catch (error) {
+        console.error(
+          "Error fetching art details for",
+          artPiece.artPieceName,
+          error
+        );
       }
-
-      setArtworks(combinedArtworks); // Set the combined results
-      console.log("Combined Artworks:", artworks);
-      console.log("Art details fetched:", articData, metData);
-    } catch (error) {
-      console.error("Error fetching art details:", error);
-      setArtworks("Failed to fetch art details");
     }
+
+    console.log("Combined Artworks:", combinedArtworks);
+    setArtworks(combinedArtworks);
   };
 
   const handleSubmit = async (event) => {
@@ -86,7 +82,7 @@ function Search({}) {
 
     // Check if input has at least 5 words
     if (inputValue.subject.trim().split(/\s+/).length < 5) {
-      alert("Please enter at least 1 word for the subject.");
+      alert("Please enter at least 5 words for the subject.");
       return;
     }
 
@@ -120,11 +116,7 @@ function Search({}) {
 
       // Fetch art details using the data from GPT API
       if (gptResponse) {
-        fetchArtworks(
-          gptResponse[0].artPieceName,
-          gptResponse[0].artist,
-          gptResponse[0].medium
-        );
+        fetchArtworks(gptResponse);
       }
     } catch (error) {
       console.error("Failed to fetch from API:", error);
