@@ -132,9 +132,9 @@ function Search({}) {
   };
 
   return (
-    <div className="bg-gray-700 p-5 min-h-screen w-full mx-auto">
+    <div className="p-5 min-h-screen w-full mx-auto">
       <div className="">
-        <h1 className="text-3xl font-bold text-center text-white mb-6">
+        <h1 className="text-3xl font-bold text-center text-black mb-6">
           Viewfinder
         </h1>
         <form
@@ -240,7 +240,7 @@ function Search({}) {
         </form>
 
         <div className="mt-6">
-          <h2 className="text-xl text-white mb-2">Output:</h2>
+          <h2 className="text-xl text-black font-bold mb-2">Output:</h2>
           <div className="bg-white p-4 rounded-lg shadow-lg">
             <pre className="text-gray-800">
               {JSON.stringify(outputValue, null, 2)}
@@ -250,8 +250,8 @@ function Search({}) {
 
         {artworks && (
           <div className="mt-6">
-            <h2 className="text-xl text-white mb-2">Art Details:</h2>
-            <div className="bg-white p-4 rounded-lg shadow-lg">
+            <h2 className="text-xl text-black font-bold mb-2">Art Details:</h2>
+            <div className="">
               <ArtCard artworks={artworks} />
             </div>
           </div>

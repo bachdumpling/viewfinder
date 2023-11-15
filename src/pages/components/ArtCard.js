@@ -1,56 +1,84 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const ArtCard = ({ artworks }) => {
-  // Function to construct image URL for Art Institute of Chicago
+  const [selectedArtwork, setSelectedArtwork] = useState(null);
+
   const getArticImageUrl = (imageId) => {
     return `https://www.artic.edu/iiif/2/${imageId}/full/843,/0/default.jpg`;
   };
 
+  useEffect(() => {
+    if (selectedArtwork) {
+      console.log(selectedArtwork.title);
+    }
+  }, [selectedArtwork]); // This effect runs whenever selectedArtwork changes
+
+  const handleImageClick = (artwork) => {
+    setSelectedArtwork(artwork);
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+    <div className="w-full mx-auto gap-10 columns-3 space-y-10">
       {artworks &&
         artworks.map((item, index) => {
           const artwork = item.data;
+
+          // Check if the item has an image
+          const hasImage =
+            (item.source === "artic" && artwork.image_id) ||
+            (item.source === "met" && artwork.primaryImage);
+
+          if (!hasImage) return null;
+
           return (
             <div
               key={index}
-              className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
+              className="shadow-md transition-transform duration-300 ease-in-out hover:scale-105"
             >
-              {item.source === "artic" && artwork.image_id ? (
-                <img
-                  src={getArticImageUrl(encodeURIComponent(artwork.image_id))}
-                  alt={`Artwork titled ${artwork.title}`}
-                  className="w-full h-auto object-contain"
-                />
-              ) : item.source === "met" && artwork.primaryImage ? (
-                <img
-                  src={artwork.primaryImage}
-                  alt={`Artwork titled ${artwork.title}`}
-                  className="w-full h-auto object-contain"
-                />
-              ) : (
-                <div className="bg-gray-100 h-64 flex items-center justify-center">
-                  <span className="text-gray-500">No image available</span>
-                </div>
-              )}
-              <div className="p-4">
-                <h3 className="text-gray-700 font-semibold text-lg mb-2">{artwork.title}</h3>
-                <p className="text-gray-700 text-sm">
-                  Artist:{" "}
-                  {item.source === "artic"
-                    ? artwork.artist_display
-                    : artwork.artistDisplayName}
-                </p>
-                <p className="text-gray-600 text-xs">
-                  Date:{" "}
-                  {item.source === "artic"
-                    ? artwork.date_display
-                    : artwork.objectDate}
-                </p>
+              <div
+                onClick={() => handleImageClick(artwork)}
+                className="cursor-pointer overflow-hidden"
+              >
+                {item.source === "artic" && artwork.image_id && (
+                  <img
+                    src={getArticImageUrl(encodeURIComponent(artwork.image_id))}
+                    alt={`Artwork titled ${artwork.title}`}
+                    className="w-full h-auto object-contain"
+                  />
+                )}
+                {item.source === "met" && artwork.primaryImage && (
+                  <img
+                    src={artwork.primaryImage}
+                    alt={`Artwork titled ${artwork.title}`}
+                    className="w-full h-auto object-contain"
+                  />
+                )}
               </div>
             </div>
           );
         })}
+
+      {selectedArtwork && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
+          <div className="bg-white text-black rounded-lg shadow-lg p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold mb-2">{selectedArtwork.title}</h2>
+            <p>
+              Artist:{" "}
+              {selectedArtwork.artist_display ||
+                selectedArtwork.artistDisplayName}
+            </p>
+            <p>
+              Date: {selectedArtwork.date_display || selectedArtwork.objectDate}
+            </p>
+            <button
+              onClick={() => setSelectedArtwork(null)}
+              className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
