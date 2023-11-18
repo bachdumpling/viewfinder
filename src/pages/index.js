@@ -145,11 +145,12 @@ export default function Home() {
               name="artType"
               value={artType}
               onChange={(e) => setArtType(e.target.value)}
-              className="text-neutral-400 text-base md:text-xl shadow-sm py-1 px-3 ml-4  focus:outline-none focus:border-none rounded-none border-black"
+              className="text-neutral-400 bg-zinc-50 text-base md:text-xl shadow-sm py-1 px-3 ml-4  focus:outline-none focus:border-none rounded-none  border-none outline-none"
             >
               <option value="painting">Painting</option>
               <option value="sculpture">Sculpture</option>
-            </select><span className="w-3 bg-white"></span>
+            </select>
+            <span className="w-3 bg-zinc-50 border-none outline-none"></span>
           </h2>
           <h3 className="text-justify md:px-10 leading-relaxed text-zinc-50">
             {generatePrompt().length > 0
