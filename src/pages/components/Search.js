@@ -1,6 +1,8 @@
 import OpenAI from "openai";
 import React, { useEffect, useState } from "react";
 import ArtCard from "./ArtCard";
+import SearchForm from "./SearchForm";
+import OutputCard from "./OutputCard";
 
 function Search({}) {
   const [inputValue, setInputValue] = useState({
@@ -18,15 +20,9 @@ function Search({}) {
     let combinedArtworks = [];
 
     for (const artPiece of artPieces) {
-      // const articQuery = `q=${encodeURIComponent(
-      //   artPiece.artPieceName
-      // )}&q=${encodeURIComponent(artPiece.artist)}`;
       const articQuery = `q=${encodeURIComponent(artPiece.artPieceName)}`;
       const articApiURL = `https://api.artic.edu/api/v1/artworks/search?${articQuery}&fields=id,title,artist_display,date_display,image_id,artist_title&limit=5`;
 
-      // const metApiQuery = `title=true&q=${encodeURIComponent(
-      //   artPiece.artPieceName
-      // )}&artistOrCulture=true&hasImages=true`;
       const metApiQuery = `title=true&q=${encodeURIComponent(
         artPiece.artPieceName
       )}`;
@@ -86,18 +82,17 @@ function Search({}) {
       return;
     }
 
-    let prompt = `What is a ${artType} of a ${inputValue.subject}`;
+    let prompt = `Find the ${artType} with these features. Subject or action: ${inputValue.subject}.`;
 
     if (inputValue.colors.trim()) {
-      prompt += ` with ${inputValue.colors} as main color(s)`;
+      prompt += ` Main colors: ${inputValue.colors}.`;
     }
     if (inputValue.styleOrEmotion.trim()) {
-      prompt += ` having ${inputValue.styleOrEmotion} as the main style or emotion`;
+      prompt += ` Art style: ${inputValue.styleOrEmotion}.`;
     }
     if (inputValue.location.trim()) {
-      prompt += `. I saw it in ${inputValue.location}`;
+      prompt += `. Witness at this place: ${inputValue.location}.`;
     }
-    prompt += ".";
 
     try {
       console.log(prompt);
@@ -134,120 +129,15 @@ function Search({}) {
   return (
     <div className="p-5 min-h-screen w-full mx-auto">
       <div className="">
-        <h1 className="text-3xl font-bold text-center text-black mb-6">
-          Viewfinder
-        </h1>
-        <form
+        <SearchForm
           onSubmit={handleSubmit}
-          className="bg-white p-4 rounded-lg shadow-lg"
-        >
-          <div className="mb-4">
-            <label
-              htmlFor="search"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              <span className="">
-                What is this
-                <select
-                  onChange={(e) => setArtType(e.target.value)}
-                  className="mx-2 rounded"
-                  value={artType}
-                >
-                  <option>painting</option>
-                  <option>sculpture</option>
-                </select>
-                :
-              </span>
-            </label>
-            <div>
-              <div className="mb-4">
-                <label
-                  htmlFor="subject"
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                >
-                  Subject:
-                </label>
-                <input
-                  id="subject"
-                  name="subject"
-                  type="text"
-                  value={inputValue.subject}
-                  onChange={handleInputChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Subject and/or action (e.g., 'woman in a blue dress reaching for the sky')"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="colors"
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                >
-                  Main Colors:
-                </label>
-                <input
-                  id="colors"
-                  name="colors"
-                  type="text"
-                  value={inputValue.colors}
-                  onChange={handleInputChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Main Colors"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="styleOrEmotion"
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                >
-                  Style or Emotion:
-                </label>
-                <input
-                  id="styleOrEmotion"
-                  name="styleOrEmotion"
-                  type="text"
-                  value={inputValue.styleOrEmotion}
-                  onChange={handleInputChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Style or Emotion (e.g., 'Renaissance', 'joyful', 'abstract')"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="location"
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                >
-                  Location:
-                </label>
-                <input
-                  id="location"
-                  name="location"
-                  type="text"
-                  value={inputValue.location}
-                  onChange={handleInputChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Where You Saw It (e.g., 'museum', 'book', 'website')"
-                />
-              </div>
-            </div>
-          </div>
+          inputValue={inputValue}
+          handleInputChange={handleInputChange}
+          artType={artType}
+          setArtType={setArtType}
+        />
 
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Submit
-          </button>
-        </form>
-
-        <div className="mt-6">
-          <h2 className="text-xl text-black font-bold mb-2">Output:</h2>
-          <div className="bg-white p-4 rounded-lg shadow-lg">
-            <pre className="text-gray-800">
-              {JSON.stringify(outputValue, null, 2)}
-            </pre>
-          </div>
-        </div>
-
+        {outputValue && <OutputCard outputValue={outputValue} />}
         {artworks && (
           <div className="mt-6">
             <h2 className="text-xl text-black font-bold mb-2">Art Details:</h2>

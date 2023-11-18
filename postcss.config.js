@@ -3,4 +3,13 @@ module.exports = {
     tailwindcss: {},
     autoprefixer: {},
   },
-}
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: "/",
+  //       destination: "/home",
+  //       permanent: true,
+  //     },
+  //   ];
+  // },
+};
