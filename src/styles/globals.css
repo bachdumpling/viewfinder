@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.input-no-appearance {
+.input {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
