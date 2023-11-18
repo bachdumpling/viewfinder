@@ -2,7 +2,7 @@ import React from "react";
 
 function SearchForm({
   onSubmit,
-  inputValue,
+  inputValue = { subject: "", colors: "", style: "", location: "" },
   handleInputChange,
   artType,
   setArtType,
