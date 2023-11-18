@@ -167,7 +167,7 @@ export default function Home() {
             setArtType={setArtType}
             styles={{
               inputClass:
-                "text-black text-base leading-4 shadow-lg bg-zinc-50 mt-2 p-4 focus:outline-none focus:border-none",
+                "text-black text-base leading-4 shadow-lg bg-zinc-50 mt-2 p-4 focus:outline-none focus:border-none rounded-none",
               labelClass: "text-zinc-50 text-base leading-6 mt-4 md:mt-8",
               buttonContainerClass: "w-full",
               buttonClass:
