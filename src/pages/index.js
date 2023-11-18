@@ -122,7 +122,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen w-full">
+    <main className="relative min-h-screen min-w-[375px] w-screen">
       <h1 className="text-5xl w-full h-fit text-center absolute top-20 inset-0 z-30 font-semibold">
         viewfinder
       </h1>
@@ -131,28 +131,28 @@ export default function Home() {
         loop
         muted
         playsInline
-        className="absolute z-10 w-full h-full object-cover"
+        className="absolute z-0 w-full h-full object-cover"
       >
         <source src="/assets/home.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
-      <div className="relative z-20 flex bg-black bg-opacity-40 w-screen h-screen p-16 gap-10">
-        <div className="flex flex-col flex-1 justify-center items-center space-y-6">
-          <h2 className="text-3xl flex justify-center">
+      <div className="relative z-20 flex md:flex-row flex-col bg-black bg-opacity-50 w-full min-h-screen p-8 md:p-16 gap-0 md:gap-10">
+        <div className="flex flex-col flex-1 justify-center items-center space-y-4 md:space-y-6">
+          <h2 className="text-xl md:text-3xl flex justify-center mt-36 md:mt-0">
             <span>Find the</span>
             <select
               id="artType"
               name="artType"
               value={artType}
               onChange={(e) => setArtType(e.target.value)}
-              className="text-neutral-400 text-xl shadow-sm py-1 px-3 ml-4  focus:outline-none focus:border-none"
+              className="text-neutral-400 text-base md:text-xl shadow-sm py-1 px-3 ml-4  focus:outline-none focus:border-none"
             >
               <option value="painting">Painting</option>
               <option value="sculpture">Sculpture</option>
             </select>
           </h2>
-          <h3 className="text-justify px-10 leading-relaxed">
+          <h3 className="text-justify md:px-10 leading-relaxed">
             {generatePrompt().length > 0
               ? generatePrompt()
               : "Enter details to start your search"}
@@ -167,9 +167,10 @@ export default function Home() {
             artType={artType}
             setArtType={setArtType}
             styles={{
+              labelClass: "text-zinc-50 text-base leading-6 mt-4 md:mt-8",
               buttonContainerClass: "w-full",
               buttonClass:
-                "text-zinc-50 bg-[#DF9D51] w-full mt-10 px-5 py-4 shadow-lg hover:bg-[#AE6818] transition-colors duration-300",
+                "text-zinc-50 bg-[#DF9D51] w-full mt-6 md:mt-10 px-5 py-4 shadow-lg hover:bg-[#AE6818] transition-colors duration-300",
             }}
           />
         </div>
