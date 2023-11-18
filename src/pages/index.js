@@ -110,7 +110,6 @@ export default function Home() {
         </span>
       );
       promptParts.push(`.`);
-
     }
 
     // Combine the text elements and JSX elements into a single array
@@ -123,7 +122,7 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen min-w-[375px] w-screen">
-      <h1 className="text-5xl w-full h-fit text-center absolute top-20 inset-0 z-30 font-semibold">
+      <h1 className="text-5xl text-zinc-50 w-full h-fit text-center absolute top-20 inset-0 z-30 font-semibold">
         viewfinder
       </h1>
       <video
@@ -139,7 +138,7 @@ export default function Home() {
 
       <div className="relative z-20 flex md:flex-row flex-col bg-black bg-opacity-50 w-full min-h-screen p-8 md:p-16 gap-0 md:gap-10">
         <div className="flex flex-col flex-1 justify-center items-center space-y-4 md:space-y-6">
-          <h2 className="text-xl md:text-3xl flex justify-center mt-36 md:mt-0">
+          <h2 className="text-xl text-zinc-50 md:text-3xl flex justify-center mt-36 md:mt-0">
             <span>Find the</span>
             <select
               id="artType"
@@ -152,7 +151,7 @@ export default function Home() {
               <option value="sculpture">Sculpture</option>
             </select>
           </h2>
-          <h3 className="text-justify md:px-10 leading-relaxed">
+          <h3 className="text-justify md:px-10 leading-relaxed text-zinc-50">
             {generatePrompt().length > 0
               ? generatePrompt()
               : "Enter details to start your search"}
@@ -167,6 +166,8 @@ export default function Home() {
             artType={artType}
             setArtType={setArtType}
             styles={{
+              inputClass:
+                "text-black text-base leading-4 shadow-lg bg-zinc-50 mt-2 p-4 focus:outline-none focus:border-none",
               labelClass: "text-zinc-50 text-base leading-6 mt-4 md:mt-8",
               buttonContainerClass: "w-full",
               buttonClass:
