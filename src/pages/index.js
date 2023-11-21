@@ -49,6 +49,7 @@ export default function Home() {
       });
       const data = await response.json();
       const gptResponse = JSON.parse(data.result[0].message.content);
+      console.log(gptResponse);
 
       // Assuming gptResponse is the data to be sent to the results page
       router.push({
