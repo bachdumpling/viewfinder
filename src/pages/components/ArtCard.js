@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Skeleton from "@mui/joy/Skeleton";
 
 const ArtCard = ({ artworks }) => {
   const [tooltip, setTooltip] = useState({
@@ -39,45 +40,64 @@ const ArtCard = ({ artworks }) => {
 
   return (
     <div className="w-full mx-auto gap-10 columns-3 space-y-10">
-      {artworks &&
-        artworks.map((item, index) => {
-          const artwork = item.data;
+      {artworks
+        ? artworks.map((item, index) => {
+            const artwork = item.data;
 
-          // Check if the item has an image
-          const hasImage =
-            (item.source === "artic" && artwork.image_id) ||
-            (item.source === "met" && artwork.primaryImage);
+            // Check if the item has an image
+            const hasImage =
+              (item.source === "artic" && artwork.image_id) ||
+              (item.source === "met" && artwork.primaryImage) ||
+              (item.source === "dalle" && artwork.primaryImage);
 
-          if (!hasImage) return null;
+            if (!hasImage) return null;
 
-          return (
-            <div
-              key={index}
-              className="shadow-md transition-transform duration-300 ease-in-out hover:scale-105"
-            >
+            return (
               <div
-                onMouseEnter={(event) => handleMouseEnter(event, artwork)}
-                onMouseLeave={handleMouseLeave}
-                className="cursor-pointer overflow-hidden"
+                key={index}
+                className="shadow-md transition-transform duration-300 ease-in-out hover:scale-105"
               >
-                {item.source === "artic" && artwork.image_id && (
-                  <img
-                    src={getArticImageUrl(encodeURIComponent(artwork.image_id))}
-                    alt={`Artwork titled ${artwork.title}`}
-                    className="w-full h-auto object-contain"
-                  />
-                )}
-                {item.source === "met" && artwork.primaryImage && (
-                  <img
-                    src={artwork.primaryImage}
-                    alt={`Artwork titled ${artwork.title}`}
-                    className="w-full h-auto object-contain"
-                  />
-                )}
+                <div
+                  onMouseEnter={(event) => handleMouseEnter(event, artwork)}
+                  onMouseLeave={handleMouseLeave}
+                  className="cursor-pointer overflow-hidden"
+                >
+                  {item.source === "artic" && artwork.image_id && (
+                    <img
+                      src={getArticImageUrl(
+                        encodeURIComponent(artwork.image_id)
+                      )}
+                      alt={`Artwork titled ${artwork.title}`}
+                      className="w-full h-auto object-contain"
+                    />
+                  )}
+                  {item.source === "met" && artwork.primaryImage && (
+                    <img
+                      src={artwork.primaryImage}
+                      alt={`Artwork titled ${artwork.title}`}
+                      className="w-full h-auto object-contain"
+                    />
+                  )}
+                  {item.source == "dalle" && artwork.primaryImage && (
+                    <img
+                      src={artwork.primaryImage}
+                      alt={`Artwork titled ${artwork.title}`}
+                      className="w-full h-auto object-contain"
+                    />
+                  )}
+                </div>
               </div>
+            );
+          })
+        : // Display skeleton loaders if artworks data is not available yet
+          Array.from(new Array(3)).map((_, index) => (
+            <div key={index} className="shadow-md">
+              <Skeleton variant="rectangular" width={210} height={118} />
+              <Skeleton variant="text" />
+              <Skeleton variant="text" />
+              <Skeleton variant="text" />
             </div>
-          );
-        })}
+          ))}
 
       {tooltip.show && (
         <div

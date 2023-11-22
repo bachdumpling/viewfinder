@@ -13,7 +13,7 @@ const Result = () => {
     style: "",
     location: "",
   });
-
+  const [dalleImage, setDalleImage] = useState(null); // State for DALL·E image
   const [artType, setArtType] = useState("painting");
   const router = useRouter();
 
@@ -24,6 +24,7 @@ const Result = () => {
     style,
     location,
     artType: queryArtType,
+    dalleImageUrl,
   } = router.query;
 
   useEffect(() => {
@@ -43,11 +44,28 @@ const Result = () => {
     if (queryArtType) {
       setArtType(queryArtType);
     }
-  }, [data, subject, colors, style, location, queryArtType]);
+
+    if (dalleImageUrl) {
+      setDalleImage(dalleImageUrl); // Set the DALL·E image URL
+    }
+  }, [data, subject, colors, style, location, queryArtType, dalleImageUrl]);
 
   // Function to call both Art Institute and Met Museum APIs
   const fetchArtworks = async (artPieces) => {
     let combinedArtworks = [];
+    if (dalleImageUrl) {
+      // Add the DALL·E generated image as a new artwork object
+      combinedArtworks.push({
+        source: "dalle",
+        data: {
+          image_id: null, // No image ID since it's not from Art Institute or Met Museum
+          primaryImage: dalleImageUrl, // Use the DALL·E image URL
+          title: `Generated Artwork Inspired by ${artPieces[0].artPieceName}}`,
+          artist_display: "AI Generated",
+          date_display: "Contemporary",
+        },
+      });
+    }
 
     for (const artPiece of artPieces) {
       const articQuery = `q=${encodeURIComponent(artPiece.artPieceName)}`;
@@ -134,12 +152,23 @@ const Result = () => {
         body: JSON.stringify({ inputValue: prompt }),
       });
       const data = await response.json();
+
       const gptResponse = JSON.parse(data.result[0].message.content);
+      const dalleImageUrl = data.dalleImageUrl;
+      console.log(gptResponse);
 
       // Assuming gptResponse is the data to be sent to the results page
       router.push({
         pathname: "/result",
-        query: { data: JSON.stringify(gptResponse) }, // pass data as query param
+        query: {
+          data: JSON.stringify(gptResponse),
+          subject: inputValue.subject,
+          colors: inputValue.colors,
+          style: inputValue.style,
+          location: inputValue.location,
+          artType: artType,
+          dalleImageUrl: dalleImageUrl,
+        },
       });
     } catch (error) {
       console.error("Failed to fetch from API:", error);
@@ -147,7 +176,11 @@ const Result = () => {
   };
 
   const handleInputChange = (event) => {
-    setInputValue({ ...inputValue, [event.target.name]: event.target.value });
+    if (event.hex) {
+      setInputValue({ ...inputValue, colors: event.hex });
+    } else {
+      setInputValue({ ...inputValue, [event.target.name]: event.target.value });
+    }
   };
 
   return (
@@ -155,28 +188,34 @@ const Result = () => {
       <h1 className="text-5xl w-full h-fit text-center font-semibold text-black pt-16 pb-20">
         <Link href="/">viewfinder</Link>
       </h1>
-      <SearchForm
-        onSubmit={handleSubmit}
-        inputValue={inputValue}
-        handleInputChange={handleInputChange}
-        artType={artType}
-        setArtType={setArtType}
-        styles={{
-          formClass: "w-full grid grid-flow-row gap-4 grid-rows-1 grid-cols-4",
-          inputContainerClass: "flex flex-col bg-white",
-          labelClass: "text-neutral-400 text-base leading-4 pt-4 px-4",
-          inputClass:
-            "text-black text-base leading-4 p-4 focus:outline-none focus:border-none h-14 w-full inline-block",
-          buttonContainerClass: "flex justify-end",
-          buttonClass:
-            "text-zinc-50 bg-[#DF9D51] w-[200px] mt-10 px-5 py-4 shadow-lg hover:bg-[#AE6818] transition-colors duration-300",
-        }}
-      />
+      {/* <div className="grid grid-flow-row gap-4 grid-rows-2 grid-cols-2 border"> */}
+      <div>
+        {/* Output card */}
+        <div></div>
+        <SearchForm
+          onSubmit={handleSubmit}
+          inputValue={inputValue}
+          handleInputChange={handleInputChange}
+          artType={artType}
+          setArtType={setArtType}
+          styles={{
+            formClass:
+              "border w-full grid grid-flow-row gap-4 grid-rows-1 grid-cols-4",
+            inputContainerClass: "flex flex-col bg-white",
+            labelClass: "text-neutral-400 text-base leading-4 pt-4 px-4",
+            inputClass:
+              "text-black text-base leading-4 p-4 focus:outline-none focus:border-none h-14 w-full inline-block appearance-none",
+            buttonContainerClass: "flex justify-end",
+            buttonClass:
+              "text-zinc-50 bg-[#DF9D51] w-[200px] mt-10 px-5 py-4 shadow-lg hover:bg-[#AE6818] transition-colors duration-300",
+          }}
+        />
+      </div>
 
       {artworks && (
         <div>
           <h2 className="text-3xl text-black font-bold my-6">Art Details:</h2>
-          <ArtCard artworks={artworks} />
+          <ArtCard artworks={artworks} dalleImage={dalleImage} />
         </div>
       )}
     </div>

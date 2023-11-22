@@ -1,11 +1,8 @@
 import Image from "next/image";
-import { Inter } from "next/font/google";
 import Search from "./components/Search";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import SearchForm from "./components/SearchForm";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const [inputValue, setInputValue] = useState({
@@ -14,6 +11,8 @@ export default function Home() {
     style: "",
     location: "",
   });
+  const [dalleImage, setDalleImage] = useState(null); // State for DALL·E image
+  const [loading, setLoading] = useState(false); // State to track loading
   const [artType, setArtType] = useState("painting");
   const router = useRouter();
 
@@ -25,6 +24,8 @@ export default function Home() {
       alert("Please enter at least 5 words for the subject.");
       return;
     }
+
+    setLoading(true); // Start loading
 
     let prompt = `Find the ${artType} with these features. Subject or action: ${inputValue.subject}.`;
 
@@ -48,7 +49,9 @@ export default function Home() {
         body: JSON.stringify({ inputValue: prompt }),
       });
       const data = await response.json();
+
       const gptResponse = JSON.parse(data.result[0].message.content);
+      const dalleImageUrl = data.dalleImageUrl;
       console.log(gptResponse);
 
       // Assuming gptResponse is the data to be sent to the results page
@@ -61,15 +64,21 @@ export default function Home() {
           style: inputValue.style,
           location: inputValue.location,
           artType: artType,
+          dalleImageUrl: dalleImageUrl,
         },
       });
     } catch (error) {
       console.error("Failed to fetch from API:", error);
+      setLoading(false); // Stop loading on error
     }
   };
 
   const handleInputChange = (event) => {
-    setInputValue({ ...inputValue, [event.target.name]: event.target.value });
+    if (event.hex) {
+      setInputValue({ ...inputValue, colors: event.hex });
+    } else {
+      setInputValue({ ...inputValue, [event.target.name]: event.target.value });
+    }
   };
 
   const generatePrompt = () => {
@@ -85,11 +94,28 @@ export default function Home() {
       );
       promptParts.push(`, `);
     }
+    // colors dictionary
+    const colors = {
+      "#FF0000": "red",
+      "#FFA500": "orange", // Orange
+      "#FFFF00": "yellow", // Bright Yellow
+      "#9ACD32": "yellow-green", // Yellow-Green
+      "#008000": "green", // Green
+      "#00FFFF": "cyan", // Cyan
+      "#0000FF": "blue", // Bright Blue
+      "#4B0082": "indigo", // Indigo:
+      "#EE82EE": "purple", // Bright Purple
+      "#FFC0CB": "pink", // Pink
+      "#C0C0C0": "silver", // Silver
+      "#000000": "black", // Black
+    };
+
     if (inputValue.colors) {
       promptParts.push(`with a color palette featuring `);
       promptParts.push(
         <span key="colors" className={underlineClass}>
-          {inputValue.colors}
+          {/* get the value of the color dictionary with the inputValue.colors as key  */}
+          {colors[inputValue.colors.toUpperCase()]}
         </span>
       );
       promptParts.push(`, `);
@@ -159,9 +185,9 @@ export default function Home() {
               : "Enter details to start your search"}
           </h3>
         </div>
-
         <div className="flex flex-1 flex-col justify-center items-center">
           <SearchForm
+            loading={loading}
             onSubmit={handleSubmit}
             inputValue={inputValue}
             handleInputChange={handleInputChange}
@@ -173,10 +199,11 @@ export default function Home() {
               labelClass: "text-zinc-50 text-base leading-6 mt-4 md:mt-8",
               buttonContainerClass: "w-full",
               buttonClass:
-                "text-zinc-50 bg-[#DF9D51] w-full mt-6 md:mt-10 px-5 py-4 shadow-lg hover:bg-[#AE6818] transition-colors duration-300",
+                "text-zinc-50 bg-[#DF9D51] w-full mt-6 md:mt-10 p-4 shadow-lg hover:bg-[#AE6818] transition-colors duration-300",
             }}
           />
         </div>
+        ;
       </div>
     </main>
   );
