@@ -1,8 +1,6 @@
 import React from "react";
 import { CirclePicker, SketchPicker, SwatchesPicker } from "react-color";
-import { newtonsCradle } from 'ldrs'
-
-newtonsCradle.register()
+import Loader from "./Loader";
 
 function SearchForm({
   onSubmit,
@@ -122,11 +120,7 @@ function SearchForm({
       <div className={layoutStyles.buttonContainerClass}>
         {loading ? (
           <button className={"h-fit" + layoutStyles.buttonClass}>
-            <l-newtons-cradle
-              size="60"
-              speed="1.4"
-              color="white"
-            ></l-newtons-cradle>
+            <Loader />
           </button>
         ) : (
           <button
