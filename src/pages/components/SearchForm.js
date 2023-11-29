@@ -130,6 +130,7 @@ function SearchForm({
             className={layoutStyles.buttonClass}
           >
             Search
+            {/* FIX: dont let people spam the search button because of API limit */}
           </button>
         )}
       </div>
