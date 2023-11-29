@@ -45,6 +45,7 @@ export default function Home() {
         "https://ajxoej606i.execute-api.us-east-2.amazonaws.com/viewfinder-gpt-api",
         {
           method: "POST",
+          mode: 'no-cors',
           headers: {
             "Content-Type": "application/json",
           },
