@@ -45,8 +45,12 @@ export default function Home() {
         "https://ajxoej606i.execute-api.us-east-2.amazonaws.com/viewfinder-gpt-api",
         {
           method: "POST",
-          mode: 'no-cors',
+          mode: "cors",
           headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers":
+              "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
+            "Access-Control-Allow-Credentials": true,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ inputValue: prompt }),
