@@ -144,13 +144,23 @@ const Result = () => {
 
     try {
       console.log(prompt);
-      const response = await fetch("/api/gpt", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ inputValue: prompt }),
-      });
+      // const response = await fetch("/api/gpt", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({ inputValue: prompt }),
+      // });
+      const response = await fetch(
+        "https://ajxoej606i.execute-api.us-east-2.amazonaws.com/viewfinder-gpt-api",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(prompt),
+        }
+      );
       const data = await response.json();
 
       const gptResponse = JSON.parse(data.result[0].message.content);
