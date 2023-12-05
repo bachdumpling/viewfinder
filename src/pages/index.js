@@ -41,6 +41,9 @@ export default function Home() {
 
     try {
       console.log(prompt);
+      console.log(JSON.stringify(prompt));
+      console.log({ inputValue: prompt });
+
       const response = await fetch(
         "https://ajxoej606i.execute-api.us-east-2.amazonaws.com/viewfinder-gpt-api",
         {
@@ -48,7 +51,7 @@ export default function Home() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ inputValue: prompt }),
+          body: JSON.stringify(prompt),
         }
       );
       const data = await response.json();
