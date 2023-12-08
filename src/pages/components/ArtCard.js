@@ -39,7 +39,7 @@ const ArtCard = ({ artworks }) => {
   };
 
   return (
-    <div className="w-full mx-auto gap-10 columns-3 space-y-10">
+    <div className="w-full mx-auto gap-10 columns-1 md:columns-2 space-y-10">
       {artworks
         ? artworks.map((item, index) => {
             const artwork = item.data;

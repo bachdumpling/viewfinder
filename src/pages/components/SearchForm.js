@@ -225,7 +225,7 @@ function SearchForm({
                       />
                     </span>
                   </Listbox.Button>
-                  <Listbox.Options className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-10">
+                  <Listbox.Options className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white shadow-lg max-h-32 md:max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-10">
                     {popularArtStyles.map((style, styleIdx) => (
                       <Listbox.Option
                         key={styleIdx}
@@ -286,7 +286,7 @@ function SearchForm({
                       />
                     </span>
                   </Listbox.Button>
-                  <Listbox.Options className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-10">
+                  <Listbox.Options className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white shadow-lg max-h-32 md:max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-10">
                     {locationOptions.map((location, locationIdx) => (
                       <Listbox.Option
                         key={locationIdx}
@@ -335,7 +335,9 @@ function SearchForm({
           </button>
         )}
         {errorMessage && (
-          <p className="text-red-500 text-sm mt-2 md:text-center text-justify">{errorMessage}</p> // Styling for error message
+          <p className="text-red-500 text-sm mt-2 md:text-center text-justify">
+            {errorMessage}
+          </p> // Styling for error message
         )}
       </div>
     </>

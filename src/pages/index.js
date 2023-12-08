@@ -66,8 +66,7 @@ export default function Home() {
       const gptResponse = JSON.parse(data.result[0].message.content);
       const dalleImageUrl = data.dalleImageUrl;
       console.log(gptResponse);
-
-      // Assuming gptResponse is the data to be sent to the results page
+      
       router.push({
         pathname: "/result",
         query: {
@@ -192,7 +191,7 @@ export default function Home() {
           View Finder
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 justify-center items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 justify-center items-center md:mb-0 mb-20">
           <div className="flex flex-col justify-center items-center space-y-4 md:space-y-6">
             <h2 className="text-xl text-zinc-50 md:text-3xl flex justify-center">
               <span>Find the</span>
