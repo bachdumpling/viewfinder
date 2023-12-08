@@ -195,10 +195,9 @@ const Result = () => {
 
   return (
     <div className="bg-zinc-100 min-h-screen w-full mx-auto p-6">
-      <h1 className="text-5xl w-full h-fit text-center font-semibold text-black pt-16 pb-20">
+      <h1 className="text-5xl w-full h-fit text-center font-semibold pt-16 pb-20">
         <Link href="/">viewfinder</Link>
       </h1>
-      {/* <div className="grid grid-flow-row gap-4 grid-rows-2 grid-cols-2 border"> */}
       <div>
         {/* Output card */}
         <div></div>
@@ -229,7 +228,7 @@ const Result = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
 export default Result;

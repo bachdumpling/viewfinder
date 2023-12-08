@@ -14,15 +14,22 @@ export default function Home() {
   const [dalleImage, setDalleImage] = useState(null); // State for DALL·E image
   const [loading, setLoading] = useState(false); // State to track loading
   const [artType, setArtType] = useState("painting");
+  const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     // ... validation and GPT API call ...
     // Check if input has at least 5 words
+    // if (inputValue.subject.trim().split(/\s+/).length < 5) {
+    //   alert("Please enter at least 5 words for the subject.");
+    //   return;
+    // }
     if (inputValue.subject.trim().split(/\s+/).length < 5) {
-      alert("Please enter at least 5 words for the subject.");
+      setErrorMessage("Please enter at least 5 words for the subject.");
       return;
+    } else {
+      setErrorMessage(""); // Clear error message if validation passes
     }
 
     setLoading(true); // Start loading
@@ -100,20 +107,33 @@ export default function Home() {
       );
       promptParts.push(`, `);
     }
-    // colors dictionary
+
+    // Colors dictionary
     const colors = {
-      "#FF0000": "red",
-      "#FFA500": "orange", // Orange
-      "#FFFF00": "yellow", // Bright Yellow
-      "#9ACD32": "yellow-green", // Yellow-Green
-      "#008000": "green", // Green
-      "#00FFFF": "cyan", // Cyan
-      "#0000FF": "blue", // Bright Blue
-      "#4B0082": "indigo", // Indigo:
-      "#EE82EE": "purple", // Bright Purple
-      "#FFC0CB": "pink", // Pink
-      "#C0C0C0": "silver", // Silver
-      "#000000": "black", // Black
+      "#FF0000": "Bright Red",
+      "#FFA500": "Orange",
+      "#FFFF00": "Bright Yellow",
+      "#9ACD32": "Yellow-Green",
+      "#008000": "Green",
+      "#00FFFF": "Cyan",
+      "#0000FF": "Bright Blue",
+      "#4B0082": "Indigo",
+      "#EE82EE": "Bright Purple",
+      "#FFC0CB": "Pink",
+      "#C0C0C0": "Silver",
+      "#000000": "Black",
+      "#800000": "Maroon",
+      "#808000": "Olive",
+      "#008080": "Teal",
+      "#800080": "Purple",
+      "#FF4500": "Orange Red",
+      "#2E8B57": "Sea Green",
+      "#DAA520": "Golden Rod",
+      "#D2691E": "Chocolate",
+      "#CD5C5C": "Indian Red",
+      "#20B2AA": "Light Sea Green",
+      "#4682B4": "Steel Blue",
+      "#6A5ACD": "Slate Blue",
     };
 
     if (inputValue.colors) {
@@ -154,62 +174,66 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen min-w-[375px] w-screen">
-      <h1 className="text-5xl text-zinc-50 w-full h-fit text-center absolute top-20 inset-0 z-30 font-semibold">
-        viewfinder
-      </h1>
+    <main className="relative min-h-screen min-w-[375px] w-screen overflow-x-hidden">
       <video
         autoPlay
         loop
         muted
         playsInline
-        className="absolute z-0 w-full h-full object-cover"
+        className="fixed z-0 w-full h-full object-cover"
+        style={{ top: 0, left: 0 }}
       >
         <source src="/assets/home.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
-      <div className="relative z-20 flex md:flex-row flex-col bg-black bg-opacity-50 w-full min-h-screen p-8 md:p-16 gap-0 md:gap-10">
-        <div className="flex flex-col flex-1 justify-center items-center space-y-4 md:space-y-6">
-          <h2 className="text-xl text-zinc-50 md:text-3xl flex justify-center mt-36 md:mt-0">
-            <span>Find the</span>
-            <select
-              id="artType"
-              name="artType"
-              value={artType}
-              onChange={(e) => setArtType(e.target.value)}
-              className="text-neutral-400 bg-zinc-50 text-base md:text-xl shadow-sm py-1 px-3 ml-4  focus:outline-none focus:border-none rounded-none  border-none outline-none"
-            >
-              <option value="painting">Painting</option>
-              <option value="sculpture">Sculpture</option>
-            </select>
-            <span className="w-3 bg-zinc-50 border-none outline-none"></span>
-          </h2>
-          <h3 className="text-justify md:px-10 leading-relaxed text-zinc-50">
-            {generatePrompt().length > 0
-              ? generatePrompt()
-              : "Enter details to start your search"}
-          </h3>
+      <div className="z-20 grid bg-black bg-opacity-50 w-full min-h-screen p-4 md:p-8 absolute">
+        <h1 className="flex justify-center items-center text-3xl md:text-5xl text-zinc-50 font-bold text-center my-10">
+          View Finder
+        </h1>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 justify-center items-center">
+          <div className="flex flex-col justify-center items-center space-y-4 md:space-y-6">
+            <h2 className="text-xl text-zinc-50 md:text-3xl flex justify-center">
+              <span>Find the</span>
+              <select
+                id="artType"
+                name="artType"
+                value={artType}
+                onChange={(e) => setArtType(e.target.value)}
+                className="text-neutral-400 bg-zinc-50 text-base md:text-xl shadow-sm py-1 px-3 ml-4 focus:outline-none focus:border-none rounded-none border-none outline-none"
+              >
+                <option value="painting">&#128444;&#65039; Painting</option>
+                <option value="sculpture">🗿 Sculpture</option>
+              </select>
+            </h2>
+            <h3 className="text-justify md:px-10 leading-relaxed text-zinc-50">
+              {generatePrompt().length > 0
+                ? generatePrompt()
+                : "Enter details to start your search"}
+            </h3>
+          </div>
+          <div className="flex flex-col justify-center items-center p-4">
+            <SearchForm
+              loading={loading}
+              onSubmit={handleSubmit}
+              inputValue={inputValue}
+              handleInputChange={handleInputChange}
+              artType={artType}
+              setArtType={setArtType}
+              errorMessage={errorMessage}
+              styles={{
+                inputClass:
+                  "text-black text-base leading-4 shadow-lg bg-zinc-50 mt-2 p-4 focus:outline-none focus:border-none rounded-none",
+                labelClass:
+                  "text-zinc-50  text-base md:text-lg leading-6 mt-4 md:mt-8",
+                buttonContainerClass: "w-full",
+                buttonClass:
+                  "text-zinc-50 bg-[#DF9D51] w-full mt-6 md:mt-10 p-4 shadow-lg hover:bg-[#AE6818] transition-colors duration-300 text-base md:text-lg",
+              }}
+            />
+          </div>
         </div>
-        <div className="flex flex-1 flex-col justify-center items-center">
-          <SearchForm
-            loading={loading}
-            onSubmit={handleSubmit}
-            inputValue={inputValue}
-            handleInputChange={handleInputChange}
-            artType={artType}
-            setArtType={setArtType}
-            styles={{
-              inputClass:
-                "text-black text-base leading-4 shadow-lg bg-zinc-50 mt-2 p-4 focus:outline-none focus:border-none rounded-none",
-              labelClass: "text-zinc-50 text-base leading-6 mt-4 md:mt-8",
-              buttonContainerClass: "w-full",
-              buttonClass:
-                "text-zinc-50 bg-[#DF9D51] w-full mt-6 md:mt-10 p-4 shadow-lg hover:bg-[#AE6818] transition-colors duration-300",
-            }}
-          />
-        </div>
-        ;
       </div>
     </main>
   );
