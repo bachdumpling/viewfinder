@@ -11,7 +11,6 @@ export default function Home() {
     style: "",
     location: "",
   });
-  const [dalleImage, setDalleImage] = useState(null); // State for DALL·E image
   const [loading, setLoading] = useState(false); // State to track loading
   const [artType, setArtType] = useState("painting");
   const [errorMessage, setErrorMessage] = useState("");
@@ -64,9 +63,9 @@ export default function Home() {
       const data = await response.json();
 
       const gptResponse = JSON.parse(data.result[0].message.content);
-      const dalleImageUrl = data.dalleImageUrl;
+      const dalleImageUrl = data.dalleImageUrl || "";
       console.log(gptResponse);
-      
+
       router.push({
         pathname: "/result",
         query: {
@@ -191,7 +190,7 @@ export default function Home() {
           View Finder
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 justify-center items-center md:mb-0 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-1ustify-center items-center md:mb-0 mb-20">
           <div className="flex flex-col justify-center items-center space-y-4 md:space-y-6">
             <h2 className="text-xl text-zinc-50 md:text-3xl flex justify-center">
               <span>Find the</span>
@@ -206,7 +205,7 @@ export default function Home() {
                 <option value="sculpture">🗿 Sculpture</option>
               </select>
             </h2>
-            <h3 className="text-justify md:px-10 leading-relaxed text-zinc-50">
+            <h3 className="text-justify px-4 md:px-10 leading-relaxed text-zinc-50">
               {generatePrompt().length > 0
                 ? generatePrompt()
                 : "Enter details to start your search"}
