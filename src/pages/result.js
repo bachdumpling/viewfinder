@@ -289,7 +289,7 @@ const Result = () => {
       </video>
       <div className="z-20 grid bg-black bg-opacity-50 w-full min-h-screen p-4 md:p-8 absolute">
         <h1 className="flex justify-center items-center text-3xl md:text-5xl text-zinc-50 font-bold text-center my-10">
-          View Finder
+          Viewfinder
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-1ustify-center items-center md:mb-0 mb-20">
