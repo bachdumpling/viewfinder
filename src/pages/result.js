@@ -18,6 +18,8 @@ const Result = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false); // State to track loading
   const [errorMessage, setErrorMessage] = useState("");
+  const [gptArtworks, setGptArtworks] = useState([]);
+  console.log("GPT Artworks:", gptArtworks);
 
   const {
     data,
@@ -32,6 +34,7 @@ const Result = () => {
   useEffect(() => {
     if (data) {
       const gptResponse = JSON.parse(data);
+      setGptArtworks(gptResponse);
       fetchArtworks(gptResponse);
     }
 
@@ -78,8 +81,8 @@ const Result = () => {
       )}`;
       const metApiURL = `https://collectionapi.metmuseum.org/public/collection/v1/search?${metApiQuery}`;
 
-      console.log("Met API URL:", metApiURL);
-      console.log("Artic API URL:", articApiURL);
+      // console.log("Met API URL:", metApiURL);
+      // console.log("Artic API URL:", articApiURL);
 
       try {
         // Fetch data from both APIs concurrently
@@ -89,7 +92,7 @@ const Result = () => {
         ]);
         const articData = await articResponse.json();
         const metData = await metResponse.json();
-        console.log("Art details fetched:", articData, metData);
+        // console.log("Art details fetched:", articData, metData);
 
         // If there are Met objects, fetch the first one to get its details
         let metObjectDetails = null;
@@ -119,7 +122,7 @@ const Result = () => {
       }
     }
 
-    console.log("Combined Artworks:", combinedArtworks);
+    // console.log("Combined Artworks:", combinedArtworks);
     setArtworks(combinedArtworks);
   };
 
@@ -149,9 +152,9 @@ const Result = () => {
     }
 
     try {
-      console.log(prompt);
-      console.log(JSON.stringify(prompt));
-      console.log({ inputValue: prompt });
+      // console.log(prompt);
+      // console.log(JSON.stringify(prompt));
+      // console.log({ inputValue: prompt });
 
       const response = await fetch(
         "https://ajxoej606i.execute-api.us-east-2.amazonaws.com/viewfinder-gpt-api",
@@ -183,7 +186,8 @@ const Result = () => {
       });
     } catch (error) {
       console.error("Failed to fetch from API:", error);
-      setLoading(false); // Stop loading on error
+    } finally {
+      setLoading(false); // Stop loading regardless of the outcome
     }
   };
 
@@ -287,13 +291,13 @@ const Result = () => {
         <source src="/assets/home.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-      <div className="z-20 grid bg-black bg-opacity-50 w-full min-h-screen p-4 md:p-8 absolute">
-        <h1 className="flex justify-center items-center text-3xl md:text-5xl text-zinc-50 font-bold text-center my-10">
-          Viewfinder
+      <div className="z-20 grid bg-black bg-opacity-50 w-full min-h-screen absolute">
+        <h1 className="p-4 md:p-16 flex justify-center items-center text-3xl md:text-5xl text-zinc-50 font-bold text-center my-10">
+          <Link href="/">Viewfinder</Link>
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-1ustify-center items-center md:mb-0 mb-20">
-          <div className="flex flex-col justify-center items-center space-y-4 md:space-y-6">
+          <div className="flex flex-col justify-center items-center space-y-4 md:space-y-6 p-4 md:p-8 ">
             <h2 className="text-xl text-zinc-50 md:text-3xl flex justify-center">
               <span>Find the</span>
               <select
@@ -313,7 +317,7 @@ const Result = () => {
                 : "Enter details to start your search"}
             </h3>
           </div>
-          <div className="flex flex-col justify-center items-center p-4">
+          <div className="flex flex-col justify-center items-center p-4 md:p-8 ">
             <SearchForm
               loading={loading}
               onSubmit={handleSubmit}
@@ -334,11 +338,37 @@ const Result = () => {
             />
           </div>
         </div>
-        <div className="z-20 mt-10 bg-[#FFFFF0] w-full min-h-screen">
-          {artworks && (
+        <div className="z-10 pt-2 md:pt-6 pb-12 md:mt-10 bg-[#FFFFF0] w-full min-h-screen">
+          {gptArtworks.length > 0 && (
             <div className="px-4 md:px-10">
               <h2 className="text-3xl text-black font-bold my-6">
-                Art Details:
+                Possible Artworks:
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {gptArtworks.map((artwork, index) => (
+                  <div
+                    key={index}
+                    className="p-6 shadow-lg text-zinc-50 bg-[#556B2F]"
+                  >
+                    <h3 className="">
+                      <strong>Artwork:</strong> {artwork.artPieceName}
+                    </h3>
+                    <p>
+                      <strong>Artist:</strong> {artwork.artist}
+                    </p>
+                    <p>
+                      <strong>Medium:</strong> {artwork.medium}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {artworks && (
+            <div className="px-4 md:px-10">
+              <h2 className="text-3xl text-black font-bold mt-12 mb-6">
+                Images:
               </h2>
               <ArtCard artworks={artworks} dalleImage={dalleImage} />
             </div>

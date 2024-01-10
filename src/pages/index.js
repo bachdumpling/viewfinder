@@ -3,6 +3,7 @@ import Search from "./components/Search";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import SearchForm from "./components/SearchForm";
+import Link from "next/link";
 
 export default function Home() {
   const [inputValue, setInputValue] = useState({
@@ -187,7 +188,7 @@ export default function Home() {
 
       <div className="z-20 grid bg-black bg-opacity-50 w-full min-h-screen p-4 md:p-8 absolute">
         <h1 className="flex justify-center items-center text-3xl md:text-5xl text-zinc-50 font-bold text-center my-10">
-          Viewfinder
+          <Link href="/">Viewfinder</Link>
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-1ustify-center items-center md:mb-0 mb-20">
