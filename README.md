@@ -15,10 +15,6 @@ Viewfinder is an innovative web application that redefines the way users discove
 
 The primary aim of Viewfinder is to simplify and democratize the discovery of art. By allowing users to explore art movements and new artists through an intuitive and conversational interface, we hope to deepen engagement with cultural heritage.
 
-## **Getting Started**
-
-[Instructions on how to set up and run the project locally]
-
 ## **Contribution**
 
 We are open to community contributions and feedback to enhance Viewfinder. Feel free to submit issues and pull requests.
