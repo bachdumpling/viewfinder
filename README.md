@@ -1,40 +1,28 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# **Viewfinder - Art Exploration Powered by AI**
 
-## Getting Started
+## **Introduction**
 
-First, run the development server:
+Viewfinder is an innovative web application that redefines the way users discover art and artists. Using natural language processing powered by OpenAI, it allows users to explore a vast range of art and artists through simple language queries.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## **Features**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **AI-Powered Queries**: Utilize OpenAI for processing natural language inputs.
+- **Art API Integration**: Fetch data from various art APIs for a comprehensive art exploration experience.
+- **User-Friendly Interface**: Designed with React, Next.js, and Tailwind CSS for a seamless user experience.
+- **Serverless Architecture**: Utilizes AWS Lambda, Amplify, and API Gateway for efficient and scalable performance.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## **Motivation**
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+The primary aim of Viewfinder is to simplify and democratize the discovery of art. By allowing users to explore art movements and new artists through an intuitive and conversational interface, we hope to deepen engagement with cultural heritage.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## **Getting Started**
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+[Instructions on how to set up and run the project locally]
 
-## Learn More
+## **Contribution**
 
-To learn more about Next.js, take a look at the following resources:
+We are open to community contributions and feedback to enhance Viewfinder. Feel free to submit issues and pull requests.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## **Explore**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Try out Viewfinder here: [http://viewfinder.bachle.info](http://viewfinder.bachle.info/)
