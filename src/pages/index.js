@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import SearchForm from "./components/SearchForm";
 import Link from "next/link";
+import Script from "next/script";
 
 export default function Home() {
   const [inputValue, setInputValue] = useState({
@@ -174,6 +175,19 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen min-w-[375px] w-screen overflow-x-hidden">
+      <Script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-4V7VHKCMNQ"
+      />
+      <Script id="google-analytics">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-4V7VHKCMNQ');
+        `}
+      </Script>
       <video
         autoPlay
         loop
