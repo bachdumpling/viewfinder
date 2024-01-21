@@ -5,7 +5,7 @@ import Script from "next/script";
 export default function App({ Component, pageProps }) {
   return (
     <div className="font-inconsolata">
-      <Script
+      {/* <Script
         strategy="lazyOnload"
         src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
       />
@@ -21,8 +21,20 @@ export default function App({ Component, pageProps }) {
                     page_path: window.location.pathname,
                     });
                 `}
-      </Script>
+      </Script> */}
+      <Script
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
+      />
+      <Script id="google-analytics">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
 
+          gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}');
+        `}
+      </Script>
       <Head>
         <title>Viewfinder</title>
       </Head>
