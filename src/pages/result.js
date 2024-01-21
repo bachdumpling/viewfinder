@@ -19,7 +19,7 @@ const Result = () => {
   const [loading, setLoading] = useState(false); // State to track loading
   const [errorMessage, setErrorMessage] = useState("");
   const [gptArtworks, setGptArtworks] = useState([]);
-  console.log("GPT Artworks:", gptArtworks);
+  // console.log("GPT Artworks:", gptArtworks);
 
   const {
     data,
@@ -170,7 +170,7 @@ const Result = () => {
 
       const gptResponse = JSON.parse(data.result[0].message.content);
       const dalleImageUrl = data.dalleImageUrl;
-      console.log(gptResponse);
+      // console.log(gptResponse);
 
       router.push({
         pathname: "/result",
