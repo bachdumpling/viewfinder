@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import SearchForm from "./components/SearchForm";
 import Link from "next/link";
 import Script from "next/script";
+import Footer from "./components/Footer";
 
 export default function Home() {
   const [inputValue, setInputValue] = useState({
@@ -221,7 +222,7 @@ export default function Home() {
           <Link href="/">Viewfinder</Link>
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-1ustify-center items-center md:mb-0 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-1 justify-center items-center md:mb-0 mb-20">
           <div className="flex flex-col justify-center items-center space-y-4 md:space-y-6">
             <h2 className="text-xl text-zinc-50 md:text-3xl flex justify-center">
               <span>Find the</span>
@@ -263,6 +264,7 @@ export default function Home() {
             />
           </div>
         </div>
+        <Footer />
       </div>
     </main>
   );

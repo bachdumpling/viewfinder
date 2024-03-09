@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import ArtCard from "./components/ArtCard";
 import SearchForm from "./components/SearchForm";
 import Link from "next/link";
+import Footer from "./components/Footer";
 
 const Result = () => {
   const [artworks, setArtworks] = useState(null);
@@ -279,7 +280,7 @@ const Result = () => {
   };
 
   return (
-    <main className="relative min-h-screen min-w-[375px] w-screen overflow-x-hidden">
+    <main className="min-h-screen min-w-[375px] w-screen overflow-x-hidden">
       <video
         autoPlay
         loop
@@ -296,8 +297,8 @@ const Result = () => {
           <Link href="/">Viewfinder</Link>
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-1ustify-center items-center md:mb-0 mb-20">
-          <div className="flex flex-col justify-center items-center space-y-4 md:space-y-6 p-4 md:p-8 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-1 justify-center items-center md:mb-0 mb-20">
+          <div className="flex flex-col justify-center items-center space-y-4 md:space-y-6 p-4 md:p-8">
             <h2 className="text-xl text-zinc-50 md:text-3xl flex justify-center">
               <span>Find the</span>
               <select
@@ -338,7 +339,7 @@ const Result = () => {
             />
           </div>
         </div>
-        <div className="z-10 pt-2 md:pt-6 pb-12 md:mt-10 bg-[#FFFFF0] w-full min-h-screen">
+        <div className="z-10 pt-2 md:pt-6 md:mt-10 bg-[#FFFFF0] w-full min-h-screen">
           {gptArtworks.length > 0 && (
             <div className="px-4 md:px-10">
               <h2 className="text-3xl text-black font-bold my-6">
@@ -367,12 +368,15 @@ const Result = () => {
 
           {artworks && (
             <div className="px-4 md:px-10">
-              <h2 className="text-3xl text-black font-bold mt-12 mb-6">
+              <h2 className="text-3xl text-black font-bold mt-12">
                 Images:
               </h2>
               <ArtCard artworks={artworks} dalleImage={dalleImage} />
             </div>
           )}
+          <div className="my-10">
+            <Footer textColor={"text-black"} />
+          </div>
         </div>
       </div>
     </main>
