@@ -1,5 +1,8 @@
 # **Viewfinder - Art Exploration Powered by AI**
 
+![image](https://github.com/bachdumpling/viewfinder/assets/100985625/e28ede95-aace-4506-82e7-7ae8fabc1b16)
+
+
 ## **Introduction**
 
 Viewfinder is an innovative web application that redefines the way users discover art and artists. Using natural language processing powered by OpenAI, it allows users to explore a vast range of art and artists through simple language queries.
