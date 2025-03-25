@@ -5,6 +5,7 @@ import ArtCard from "./components/ArtCard";
 import SearchForm from "./components/SearchForm";
 import Link from "next/link";
 import Footer from "./components/Footer";
+import SearchContainer from "./components/SearchContainer";
 
 const Result = () => {
   const [artworks, setArtworks] = useState(null);
@@ -281,104 +282,44 @@ const Result = () => {
 
   return (
     <main className="min-h-screen min-w-[375px] w-screen overflow-x-hidden">
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="fixed z-0 w-full h-full object-cover"
-        style={{ top: 0, left: 0 }}
-      >
-        <source src="/assets/home.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-      <div className="z-20 grid bg-black bg-opacity-50 w-full min-h-screen absolute">
-        <h1 className="p-4 md:p-16 flex justify-center items-center text-3xl md:text-5xl text-zinc-50 font-bold text-center my-10">
-          <Link href="/">Viewfinder</Link>
-        </h1>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-1 justify-center items-center md:mb-0 mb-20">
-          <div className="flex flex-col justify-center items-center space-y-4 md:space-y-6 p-4 md:p-8">
-            <h2 className="text-xl text-zinc-50 md:text-3xl flex justify-center">
-              <span>Find the</span>
-              <select
-                id="artType"
-                name="artType"
-                value={artType}
-                onChange={(e) => setArtType(e.target.value)}
-                className="text-neutral-400 bg-zinc-50 text-base md:text-xl shadow-sm py-1 px-3 ml-4 focus:outline-none focus:border-none rounded-none border-none outline-none"
-              >
-                <option value="painting">&#128444;&#65039; Painting</option>
-                <option value="sculpture">🗿 Sculpture</option>
-              </select>
-            </h2>
-            <h3 className="text-justify md:px-10 leading-relaxed text-zinc-50">
-              {generatePrompt().length > 0
-                ? generatePrompt()
-                : "Enter details to start your search"}
-            </h3>
-          </div>
-          <div className="flex flex-col justify-center items-center p-4 md:p-8 ">
-            <SearchForm
-              loading={loading}
-              onSubmit={handleSubmit}
-              inputValue={inputValue}
-              handleInputChange={handleInputChange}
-              artType={artType}
-              setArtType={setArtType}
-              errorMessage={errorMessage}
-              styles={{
-                inputClass:
-                  "text-black text-base leading-4 shadow-lg bg-zinc-50 mt-2 p-4 focus:outline-none focus:border-none rounded-none",
-                labelClass:
-                  "text-zinc-50  text-base md:text-lg leading-6 mt-4 md:mt-8",
-                buttonContainerClass: "w-full",
-                buttonClass:
-                  "text-zinc-50 bg-[#DF9D51] w-full mt-6 md:mt-10 p-4 shadow-lg hover:bg-[#AE6818] transition-colors duration-300 text-base md:text-lg",
-              }}
-            />
-          </div>
-        </div>
-        <div className="z-10 pt-2 md:pt-6 md:mt-10 bg-[#FFFFF0] w-full min-h-screen">
-          {gptArtworks.length > 0 && (
-            <div className="px-4 md:px-10">
-              <h2 className="text-3xl text-black font-bold my-6">
-                Possible Artworks:
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {gptArtworks.map((artwork, index) => (
-                  <div
-                    key={index}
-                    className="p-6 shadow-lg text-zinc-50 bg-[#556B2F]"
-                  >
-                    <h3 className="">
-                      <strong>Artwork:</strong> {artwork.artPieceName}
-                    </h3>
-                    <p>
-                      <strong>Artist:</strong> {artwork.artist}
-                    </p>
-                    <p>
-                      <strong>Medium:</strong> {artwork.medium}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {artworks && (
-            <div className="px-4 md:px-10">
-              <h2 className="text-3xl text-black font-bold mt-12">
-                Images:
-              </h2>
-              <ArtCard artworks={artworks} dalleImage={dalleImage} />
-            </div>
-          )}
-          <div className="my-10">
-            <Footer textColor={"text-black"} />
-          </div>
-        </div>
+      <div className="fixed top-0 w-full">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="fixed z-0 w-full h-full object-cover brightness-50"
+          style={{ top: 0, left: 0 }}
+        >
+          <source src="/assets/home.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
+
+      <Link href="/">
+        <h1 className="absolute top-10 right-0 left-0 flex justify-center items-center font-sans text-5xl md:text-5xl lg:text-9xl text-zinc-300 font-extrabold tracking-widest text-center mix-blend-difference isolation-auto">
+          VIEWFINDER
+        </h1>
+      </Link>
+
+      <SearchContainer
+        absolute={true}
+        result={true}
+        exampleSearches={true}
+        footer={true}
+        loading={loading}
+        handleSubmit={handleSubmit}
+        inputValue={inputValue}
+        handleInputChange={handleInputChange}
+        artType={artType}
+        setArtType={setArtType}
+        errorMessage={errorMessage}
+        generatePrompt={generatePrompt}
+        setInputValue={setInputValue}
+        artworks={artworks}
+        dalleImage={dalleImage}
+        gptArtworks={gptArtworks}
+      />
     </main>
   );
 };

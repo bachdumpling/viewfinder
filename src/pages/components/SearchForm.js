@@ -14,7 +14,7 @@ function SearchForm({
   setArtType,
   styles = {},
   loading,
-  errorMessage
+  errorMessage,
 }) {
   const defaultLayoutStyles = {
     formClass: "w-full",
@@ -139,184 +139,145 @@ function SearchForm({
                 "#FF0000", // Bright Red
                 "#FFA500", // Orange
                 "#FFFF00", // Bright Yellow
-                "#9ACD32", // Yellow-Green
                 "#008000", // Green
-                "#00FFFF", // Cyan
                 "#0000FF", // Bright Blue
                 "#4B0082", // Indigo
                 "#EE82EE", // Bright Purple
                 "#FFC0CB", // Pink
                 "#C0C0C0", // Silver
                 "#000000", // Black
-                "#800000", // Maroon
-                "#808000", // Olive
-                "#008080", // Teal
                 "#800080", // Purple
                 "#FF4500", // Orange Red
                 "#2E8B57", // Sea Green
-                "#DAA520", // Golden Rod
                 "#D2691E", // Chocolate
-                "#CD5C5C", // Indian Red
-                "#20B2AA", // Light Sea Green
-                "#4682B4", // Steel Blue
                 "#6A5ACD", // Slate Blue
               ]}
             />
           </div>
         </div>
-        {/* <div className={layoutStyles.inputContainerClass}>
-          <label htmlFor="style" className={layoutStyles.labelClass}>
-            Art Style:
-          </label>
-          <input
-            type="text"
-            id="style"
-            name="style"
-            value={inputValue.style}
-            onChange={handleInputChange}
-            className={layoutStyles.inputClass}
-            placeholder="renaissance, surrealism, oil painting, etc."
-          />
-        </div> */}
-        {/* <div className={layoutStyles.inputContainerClass}>
-          <label htmlFor="style" className={layoutStyles.labelClass}>
-            Art Style:
-          </label>
-          <Select
-            id="style"
-            name="style"
-            value={artStyleOptions.find(
-              (option) => option.value === inputValue.style
-            )}
-            onChange={handleArtStyleChange}
-            options={artStyleOptions}
-            className={{
-            }}
-            placeholder="select or search an art style"
-            isSearchable
-          />
-        </div> */}
 
-        <div className={layoutStyles.inputContainerClass}>
-          <Listbox
-            value={inputValue.style}
-            onChange={(value) =>
-              handleInputChange({ target: { name: "style", value } })
-            }
-          >
-            {({ open }) => (
-              <Fragment>
-                <Listbox.Label className={layoutStyles.labelClass}>
-                  🖌️ Art Style:
-                </Listbox.Label>
-                <div className="relative mt-2">
-                  <Listbox.Button
-                    className={
-                      inputValue.style
-                        ? `text-black text-start w-full text-base leading-4 shadow-lg bg-zinc-50 mt-2 p-4 focus:outline-none focus:border-none`
-                        : `text-neutral-400 text-start w-full text-base leading-4 shadow-lg bg-zinc-50 mt-2 p-4 focus:outline-none focus:border-none`
-                    }
-                  >
-                    {inputValue.style || "select an art style"}
-                    <span className="absolute right-4 pointer-events-none">
-                      <ChevronDown
-                        className="w-5 h-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </Listbox.Button>
-                  <Listbox.Options className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white shadow-lg max-h-32 md:max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-10">
-                    {popularArtStyles.map((style, styleIdx) => (
-                      <Listbox.Option
-                        key={styleIdx}
-                        className={({ active }) =>
-                          `cursor-default select-none relative py-2 pl-4 ${
-                            active
-                              ? "text-amber-900 bg-amber-100 font-extrabold"
-                              : "text-gray-600"
-                          }`
-                        }
-                        value={style}
-                      >
-                        {({ selected }) => (
-                          <>
-                            <span
-                              className={`block truncate ${
-                                selected ? "font-medium" : "font-normal"
-                              }`}
-                            >
-                              {style}
-                            </span>
-                          </>
-                        )}
-                      </Listbox.Option>
-                    ))}
-                  </Listbox.Options>
-                </div>
-              </Fragment>
-            )}
-          </Listbox>
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className={layoutStyles.inputContainerClass}>
+            <Listbox
+              value={inputValue.style}
+              onChange={(value) =>
+                handleInputChange({ target: { name: "style", value } })
+              }
+            >
+              {({ open }) => (
+                <Fragment>
+                  <Listbox.Label className={layoutStyles.labelClass}>
+                    🖌️ Art Style:
+                  </Listbox.Label>
+                  <div className="relative mt-2">
+                    <Listbox.Button
+                      className={
+                        inputValue.style
+                          ? `text-black text-start w-full text-base leading-4 shadow-lg bg-zinc-50 mt-2 p-4 focus:outline-none focus:border-none`
+                          : `text-neutral-400 text-start w-full text-base leading-4 shadow-lg bg-zinc-50 mt-2 p-4 focus:outline-none focus:border-none`
+                      }
+                    >
+                      {inputValue.style || "select an art style (optional)"}
+                      <span className="absolute right-4 pointer-events-none">
+                        <ChevronDown
+                          className="w-5 h-5 text-gray-400"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </Listbox.Button>
+                    <Listbox.Options className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white shadow-lg max-h-32 md:max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-20">
+                      {popularArtStyles.map((style, styleIdx) => (
+                        <Listbox.Option
+                          key={styleIdx}
+                          className={({ active }) =>
+                            `cursor-default select-none relative py-2 pl-4 ${
+                              active
+                                ? "text-amber-900 bg-amber-100 font-extrabold"
+                                : "text-gray-600"
+                            }`
+                          }
+                          value={style}
+                        >
+                          {({ selected }) => (
+                            <>
+                              <span
+                                className={`block truncate ${
+                                  selected ? "font-medium" : "font-normal"
+                                }`}
+                              >
+                                {style}
+                              </span>
+                            </>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </div>
+                </Fragment>
+              )}
+            </Listbox>
+          </div>
 
-        <div className={layoutStyles.inputContainerClass}>
-          <Listbox
-            value={inputValue.location}
-            onChange={(value) =>
-              handleInputChange({ target: { name: "location", value } })
-            }
-          >
-            {({ open }) => (
-              <Fragment>
-                <Listbox.Label className={layoutStyles.labelClass}>
-                  📍 Seen it Here:
-                </Listbox.Label>
-                <div className="relative mt-2">
-                  <Listbox.Button
-                    className={
-                      inputValue.location
-                        ? "text-black text-start w-full text-base leading-4 shadow-lg bg-zinc-50 mt-2 p-4 focus:outline-none focus:border-none"
-                        : "text-neutral-400 text-start w-full text-base leading-4 shadow-lg bg-zinc-50 mt-2 p-4 focus:outline-none focus:border-none"
-                    }
-                  >
-                    {inputValue.location || "Select a location"}
-                    <span className="absolute right-4 pointer-events-none">
-                      <ChevronDown
-                        className="w-5 h-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </Listbox.Button>
-                  <Listbox.Options className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white shadow-lg max-h-32 md:max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-20">
-                    {locationOptions.map((location, locationIdx) => (
-                      <Listbox.Option
-                        key={locationIdx}
-                        className={({ active }) =>
-                          `cursor-default select-none relative py-2 pl-4 ${
-                            active
-                              ? "text-amber-900 bg-amber-100 font-extrabold"
-                              : "text-gray-600"
-                          }`
-                        }
-                        value={location.value}
-                      >
-                        {({ selected }) => (
-                          <>
-                            <span
-                              className={`block truncate ${
-                                selected ? "font-medium" : "font-normal"
-                              }`}
-                            >
-                              {location.label}
-                            </span>
-                          </>
-                        )}
-                      </Listbox.Option>
-                    ))}
-                  </Listbox.Options>
-                </div>
-              </Fragment>
-            )}
-          </Listbox>
+          <div className={layoutStyles.inputContainerClass}>
+            <Listbox
+              value={inputValue.location}
+              onChange={(value) =>
+                handleInputChange({ target: { name: "location", value } })
+              }
+            >
+              {({ open }) => (
+                <Fragment>
+                  <Listbox.Label className={layoutStyles.labelClass}>
+                    📍 Seen it Here:
+                  </Listbox.Label>
+                  <div className="relative mt-2">
+                    <Listbox.Button
+                      className={
+                        inputValue.location
+                          ? "text-black text-start w-full text-base leading-4 shadow-lg bg-zinc-50 mt-2 p-4 focus:outline-none focus:border-none"
+                          : "text-neutral-400 text-start w-full text-base leading-4 shadow-lg bg-zinc-50 mt-2 p-4 focus:outline-none focus:border-none"
+                      }
+                    >
+                      {inputValue.location || "Select a location (optional)"}
+                      <span className="absolute right-4 pointer-events-none">
+                        <ChevronDown
+                          className="w-5 h-5 text-gray-400"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </Listbox.Button>
+                    <Listbox.Options className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white shadow-lg max-h-32 md:max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-20">
+                      {locationOptions.map((location, locationIdx) => (
+                        <Listbox.Option
+                          key={locationIdx}
+                          className={({ active }) =>
+                            `cursor-default select-none relative py-2 pl-4 ${
+                              active
+                                ? "text-amber-900 bg-amber-100 font-extrabold"
+                                : "text-gray-600"
+                            }`
+                          }
+                          value={location.value}
+                        >
+                          {({ selected }) => (
+                            <>
+                              <span
+                                className={`block truncate ${
+                                  selected ? "font-medium" : "font-normal"
+                                }`}
+                              >
+                                {location.label}
+                              </span>
+                            </>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </div>
+                </Fragment>
+              )}
+            </Listbox>
+          </div>
         </div>
       </form>
       <div className={layoutStyles.buttonContainerClass}>
