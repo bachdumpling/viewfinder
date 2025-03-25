@@ -43,9 +43,9 @@ export default function SearchContainer({
               </select>
             </h2>
             <h3 className="text-center leading-relaxed text-zinc-50 w-full">
-              {typeof generatePrompt === 'function' 
-                ? generatePrompt().length > 0 
-                  ? generatePrompt() 
+              {typeof generatePrompt === "function"
+                ? generatePrompt().length > 0
+                  ? generatePrompt()
                   : "Enter details to start your search"
                 : "Enter details to start your search"}
             </h3>
