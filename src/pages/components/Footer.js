@@ -16,7 +16,7 @@ export default function Footer({ textColor = "text-zinc-50" }) {
         © 2024. All rights reserved.
       </p>
       <Link
-        href="https://bachle.info/projects/tools/viewfinder"
+        href="https://bachle.info/tools/viewfinder"
         className={`${textColor} text-xs md:text-sm leading-relaxed tracking-wide underline decoration-wavy decoration-1`}
         target="_blank"
         rel="noopener noreferrer"
